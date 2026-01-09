@@ -249,6 +249,7 @@ const STORAGE_KEYS = {
   selectedExam: 'exam-timer-selected-exam',
   filters: 'exam-timer-filters',
   currentView: 'exam-timer-current-view',
+  favorites: 'exam-timer-favorites',
 };
 
 // -----------------------------
@@ -304,6 +305,42 @@ function loadFilters() {
     console.warn('Filtreler yüklenemedi:', e);
   }
   return null;
+}
+
+// -----------------------------
+// LocalStorage: Favoriler
+// -----------------------------
+
+function saveFavorites(favorites) {
+  window.localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favorites));
+}
+
+function loadFavorites() {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEYS.favorites);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {
+    console.warn('Favoriler yüklenemedi:', e);
+  }
+  return [];
+}
+
+function toggleFavorite(examId) {
+  const index = state.favorites.indexOf(examId);
+  if (index === -1) {
+    state.favorites.push(examId);
+  } else {
+    state.favorites.splice(index, 1);
+  }
+  saveFavorites(state.favorites);
+  renderFavorites();
+  renderList(state.visibleExams, state.selectedExamId);
+}
+
+function isFavorite(examId) {
+  return state.favorites.includes(examId);
 }
 
 // -----------------------------
@@ -366,6 +403,105 @@ function populateGroupFilter() {
 // Render Fonksiyonları
 // -----------------------------
 
+function renderFavorites() {
+  const section = document.getElementById('favorites-section');
+  const listEl = document.getElementById('favorites-list');
+  const countEl = document.getElementById('favorites-count');
+
+  // Favori sınavları bul
+  const favoriteExams = state.computedExams.filter((e) => state.favorites.includes(e.id));
+  
+  // Tarihe göre sırala (en yakın önce)
+  favoriteExams.sort((a, b) => a.remainingDays - b.remainingDays);
+
+  if (favoriteExams.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  countEl.textContent = favoriteExams.length;
+  listEl.innerHTML = '';
+
+  favoriteExams.forEach((exam) => {
+    const card = document.createElement('div');
+    card.className = 'favorite-card';
+
+    // Karta tıklanınca detay sayfasına git
+    card.addEventListener('click', (e) => {
+      if (!e.target.closest('.favorite-remove')) {
+        showDetailView(exam.id);
+      }
+    });
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'favorite-card-header';
+
+    const info = document.createElement('div');
+    info.className = 'favorite-card-info';
+
+    const title = document.createElement('div');
+    title.className = 'favorite-title';
+    title.textContent = exam.title;
+
+    const group = document.createElement('span');
+    group.className = 'favorite-group';
+    group.textContent = exam.group;
+
+    info.appendChild(title);
+    info.appendChild(group);
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'favorite-remove';
+    removeBtn.innerHTML = '✕';
+    removeBtn.title = 'Takip listesinden çıkar';
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFavorite(exam.id);
+    });
+
+    header.appendChild(info);
+    header.appendChild(removeBtn);
+
+    // Countdown
+    const countdown = document.createElement('div');
+    countdown.className = 'favorite-countdown';
+
+    const countdownNumber = document.createElement('div');
+    countdownNumber.className = 'favorite-countdown-number';
+
+    const countdownLabel = document.createElement('div');
+    countdownLabel.className = 'favorite-countdown-label';
+
+    if (exam.remainingDays < 0) {
+      countdownNumber.textContent = Math.abs(exam.remainingDays);
+      countdownLabel.textContent = 'gün önce geçti';
+    } else if (exam.remainingDays === 0) {
+      countdownNumber.textContent = '🎯';
+      countdownLabel.textContent = 'Bugün sınav var!';
+    } else {
+      countdownNumber.textContent = exam.remainingDays;
+      countdownLabel.textContent = 'gün kaldı';
+    }
+
+    countdown.appendChild(countdownNumber);
+    countdown.appendChild(countdownLabel);
+
+    // Date
+    const dateEl = document.createElement('div');
+    dateEl.className = 'favorite-date';
+    dateEl.innerHTML = `<span class="favorite-date-icon">📅</span>${formatDateTr(exam.date)}`;
+
+    card.appendChild(header);
+    card.appendChild(countdown);
+    card.appendChild(dateEl);
+
+    listEl.appendChild(card);
+  });
+}
+
 function renderList(visibleExams, selectedExamId) {
   const listEl = document.getElementById('exam-list');
   listEl.innerHTML = '';
@@ -399,6 +535,10 @@ function renderList(visibleExams, selectedExamId) {
     const header = document.createElement('div');
     header.className = 'exam-card-header';
 
+    // Header info (title + group)
+    const headerInfo = document.createElement('div');
+    headerInfo.className = 'exam-header-info';
+
     const titleEl = document.createElement('h3');
     titleEl.className = 'exam-title';
     titleEl.textContent = exam.title;
@@ -407,8 +547,26 @@ function renderList(visibleExams, selectedExamId) {
     groupEl.className = 'exam-group';
     groupEl.textContent = exam.group;
 
-    header.appendChild(titleEl);
-    header.appendChild(groupEl);
+    headerInfo.appendChild(titleEl);
+    headerInfo.appendChild(groupEl);
+
+    // Yıldız butonu (favori)
+    const starBtn = document.createElement('button');
+    starBtn.className = 'star-btn';
+    if (isFavorite(exam.id)) {
+      starBtn.classList.add('active');
+      starBtn.innerHTML = '★';
+    } else {
+      starBtn.innerHTML = '☆';
+    }
+    starBtn.title = isFavorite(exam.id) ? 'Takip listesinden çıkar' : 'Takip listesine ekle';
+    starBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFavorite(exam.id);
+    });
+
+    header.appendChild(headerInfo);
+    header.appendChild(starBtn);
 
     // Countdown display
     const countdown = document.createElement('div');
@@ -586,6 +744,7 @@ const state = {
   visibleExams: [],
   selectedExamId: null,
   currentView: 'list',
+  favorites: [],
   filters: {
     group: 'all',
     query: '',
@@ -616,6 +775,7 @@ function recomputeAll() {
     }
   }
 
+  renderFavorites();
   renderList(state.visibleExams, state.selectedExamId);
 
   // Eğer detail view açıksa, onu da güncelle
@@ -661,6 +821,10 @@ function bindEvents() {
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const backBtn = document.getElementById('back-btn');
   const logoBtn = document.getElementById('logo-btn');
+  const favoritesHeader = document.getElementById('favorites-header');
+  const favoritesToggle = document.getElementById('favorites-toggle');
+  const favoritesContent = document.getElementById('favorites-content');
+  const favoritesGrid = document.getElementById('favorites-list');
 
   // Back button - geri dön
   backBtn.addEventListener('click', () => {
@@ -670,6 +834,27 @@ function bindEvents() {
   // Logo click - ana sayfaya dön
   logoBtn.addEventListener('click', () => {
     showListView();
+  });
+
+  // Favorites toggle - aç/kapat
+  favoritesHeader.addEventListener('click', () => {
+    const isExpanded = favoritesContent.classList.contains('expanded');
+    
+    if (isExpanded) {
+      // Kapat
+      favoritesContent.classList.remove('expanded');
+      favoritesContent.classList.add('collapsed');
+      favoritesToggle.classList.remove('expanded');
+      favoritesToggle.textContent = '▶';
+      favoritesGrid.classList.remove('expanded');
+    } else {
+      // Aç
+      favoritesContent.classList.remove('collapsed');
+      favoritesContent.classList.add('expanded');
+      favoritesToggle.classList.add('expanded');
+      favoritesToggle.textContent = '▼';
+      favoritesGrid.classList.add('expanded');
+    }
   });
 
   // Filters
@@ -734,6 +919,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedExamId = loadSelectedExam();
   if (savedExamId) {
     state.selectedExamId = savedExamId;
+  }
+  
+  // Kaydedilmiş favorileri yükle
+  const savedFavorites = loadFavorites();
+  if (savedFavorites && Array.isArray(savedFavorites)) {
+    state.favorites = savedFavorites;
   }
   
   // Grup filtresi seçeneklerini doldur

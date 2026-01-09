@@ -319,6 +319,262 @@ body {
   display: block;
 }
 
+/* --- Favorites Section --- */
+.favorites-section {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.favorites-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.favorites-header:hover .favorites-toggle {
+  background: rgba(251, 191, 36, 0.2);
+}
+
+.favorites-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  color: var(--accent-warning);
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.favorites-toggle.expanded {
+  transform: rotate(180deg);
+}
+
+.favorites-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-warning);
+  flex: 1;
+}
+
+.favorites-title span {
+  font-size: 1.1rem;
+}
+
+.favorites-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  background: var(--accent-warning);
+  border-radius: 999px;
+}
+
+.favorites-content {
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out;
+}
+
+.favorites-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.favorites-content.expanded {
+  max-height: 2000px;
+  opacity: 1;
+  margin-top: 16px;
+}
+
+/* Compact grid (default) */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* Expanded grid - büyük kartlar */
+.favorites-grid.expanded {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+/* Favorite card - büyük versiyon */
+.favorite-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.favorite-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-warning), #fbbf24);
+  opacity: 1;
+}
+
+.favorite-card:hover {
+  border-color: var(--accent-warning);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 0 20px rgba(251, 191, 36, 0.1);
+}
+
+.favorite-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.favorite-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.favorite-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.favorite-group {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-warning);
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 999px;
+}
+
+.favorite-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.favorite-remove:hover {
+  color: var(--accent-danger);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--accent-danger);
+}
+
+.favorite-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+  margin: 12px 0;
+  background: rgba(251, 191, 36, 0.05);
+  border-radius: var(--radius-md);
+}
+
+.favorite-countdown-number {
+  font-family: var(--font-mono);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent-warning), #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.favorite-countdown-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 6px;
+}
+
+.favorite-date {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.favorite-date-icon {
+  margin-right: 6px;
+}
+
+/* Star button on exam cards */
+.star-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.star-btn:hover {
+  color: var(--accent-warning);
+  border-color: var(--accent-warning);
+  transform: scale(1.1);
+}
+
+.star-btn.active {
+  color: var(--accent-warning);
+  background: rgba(251, 191, 36, 0.15);
+  border-color: var(--accent-warning);
+}
+
+.star-btn.active:hover {
+  background: rgba(251, 191, 36, 0.25);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -510,10 +766,14 @@ input::placeholder {
 /* --- Card Header --- */
 .exam-card-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.exam-header-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .exam-title {
@@ -521,10 +781,11 @@ input::placeholder {
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.3;
+  margin-bottom: 6px;
 }
 
 .exam-group {
-  flex-shrink: 0;
+  display: inline-block;
   padding: 3px 10px;
   font-size: 0.65rem;
   font-weight: 700;
