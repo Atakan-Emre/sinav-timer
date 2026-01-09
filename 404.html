@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Sayfa Bulunamadı | Sınav Timer 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: #0a0a1a;
+        color: #f0f0ff;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 500px;
+      }
+
+      .error-icon {
+        font-size: 6rem;
+        margin-bottom: 20px;
+        animation: bounce 2s ease-in-out infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+
+      .error-code {
+        font-size: 8rem;
+        font-weight: 800;
+        line-height: 1;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 16px;
+      }
+
+      .error-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #a8a8c8;
+        margin-bottom: 24px;
+      }
+
+      .error-description {
+        font-size: 1rem;
+        color: #6b6b8d;
+        margin-bottom: 32px;
+        line-height: 1.6;
+      }
+
+      .home-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 28px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border: none;
+        border-radius: 999px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .home-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+      }
+
+      .bg-glow {
+        position: fixed;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        filter: blur(100px);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .bg-glow-1 {
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+        top: -100px;
+        right: -100px;
+      }
+
+      .bg-glow-2 {
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+        bottom: -100px;
+        left: -100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <div class="container">
+      <div class="error-icon">🔍</div>
+      <div class="error-code">404</div>
+      <h1 class="error-title">Sayfa Bulunamadı</h1>
+      <p class="error-description">
+        Aradığınız sayfa taşınmış, silinmiş veya hiç var olmamış olabilir.
+        Ana sayfaya dönüp sınav takvimine göz atabilirsiniz.
+      </p>
+      <a href="./" class="home-btn">
+        <span>⏱️</span>
+        <span>Ana Sayfaya Dön</span>
+      </a>
+    </div>
+  </body>
+</html>
