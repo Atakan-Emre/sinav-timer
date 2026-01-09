@@ -57,7 +57,7 @@
 
 1. **Dosyaları indirin** veya bu repoyu klonlayın:
    ```powershell
-   git clone https://github.com/KULLANICI_ADINIZ/sinav-timer.git
+   git clone https://github.com/Atakan-Emre/sinav-timer.git
    cd sinav-timer
    ```
 
@@ -88,7 +88,7 @@
 
 4. **Birkaç dakika bekleyin**, siteniz şu adreste yayında olacak:
    ```
-   https://KULLANICI_ADINIZ.github.io/sinav-timer/
+   https://atakan-emre.github.io/sinav-timer/
    ```
 
 ---

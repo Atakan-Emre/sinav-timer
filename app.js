@@ -312,16 +312,18 @@ function loadFilters() {
 
 function showView(viewName) {
   const views = document.querySelectorAll('.view');
-  const tabs = document.querySelectorAll('.nav-tab');
-
   views.forEach((v) => v.classList.remove('active'));
-  tabs.forEach((t) => t.classList.remove('active'));
 
   const targetView = document.getElementById(`view-${viewName}`);
-  const targetTab = document.querySelector(`.nav-tab[data-view="${viewName}"]`);
-
   if (targetView) targetView.classList.add('active');
-  if (targetTab) targetTab.classList.add('active');
+
+  // Back button görünürlüğü
+  const backBtn = document.getElementById('back-btn');
+  if (viewName === 'detail') {
+    backBtn.style.display = 'flex';
+  } else {
+    backBtn.style.display = 'none';
+  }
 
   state.currentView = viewName;
   window.localStorage.setItem(STORAGE_KEYS.currentView, viewName);
@@ -329,7 +331,6 @@ function showView(viewName) {
 
 function showListView() {
   showView('list');
-  document.getElementById('nav-detail-tab').style.display = 'none';
 }
 
 function showDetailView(examId) {
@@ -338,12 +339,6 @@ function showDetailView(examId) {
 
   state.selectedExamId = examId;
   saveSelectedExam(examId);
-
-  // Update nav tab
-  const detailTab = document.getElementById('nav-detail-tab');
-  const detailTitle = document.getElementById('nav-detail-title');
-  detailTab.style.display = 'flex';
-  detailTitle.textContent = exam.title;
 
   // Render detail view
   renderDetailView(exam);
@@ -664,23 +659,16 @@ function bindEvents() {
   const sortSelectEl = document.getElementById('sort-select');
   const showPastEl = document.getElementById('show-past-toggle');
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  const backBtn = document.getElementById('back-to-list');
-  const navTabs = document.querySelectorAll('.nav-tab[data-view]');
+  const backBtn = document.getElementById('back-btn');
+  const logoBtn = document.getElementById('logo-btn');
 
-  // Navigation tabs
-  navTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const view = tab.dataset.view;
-      if (view === 'list') {
-        showListView();
-      } else if (view === 'detail' && state.selectedExamId) {
-        showDetailView(state.selectedExamId);
-      }
-    });
+  // Back button - geri dön
+  backBtn.addEventListener('click', () => {
+    showListView();
   });
 
-  // Back button
-  backBtn.addEventListener('click', () => {
+  // Logo click - ana sayfaya dön
+  logoBtn.addEventListener('click', () => {
     showListView();
   });
 
