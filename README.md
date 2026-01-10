@@ -76,7 +76,7 @@
    git add .
    git commit -m "Initial commit: Sinav Timer 2026"
    git branch -M main
-   git remote add origin https://github.com/Atakan-Emre/sinav-timer.git
+   git remote add origin https://github.com/KULLANICI-ADINIZ/sinav-timer.git
    git push -u origin main
    ```
 
@@ -88,7 +88,7 @@
 
 4. **Birkaç dakika bekleyin**, siteniz şu adreste yayında olacak:
    ```
-   https://atakan-emre.github.io/sinav-timer/
+   https://KULLANICI-ADINIZ.github.io/sinav-timer/
    ```
 
 ---
